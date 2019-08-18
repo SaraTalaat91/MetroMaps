@@ -19,7 +19,7 @@ import retrofit2.Response;
 
 public class MapViewModel extends ViewModel {
 
-    private MutableLiveData<List<Row>> mRowsLiveData;
+    private MutableLiveData<List<Row>> mRowsLiveData = new MutableLiveData<>();
 
     public void getRoutesFromDb(){
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
