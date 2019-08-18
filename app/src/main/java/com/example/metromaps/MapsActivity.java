@@ -7,11 +7,14 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
 
-import com.example.metromaps.models.Row;
+import com.example.metromaps.models.Route;
 import com.example.metromaps.viewmodels.MapViewModel;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 
@@ -19,7 +22,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private MapViewModel mapViewModel;
-    private LiveData<List<Row>> mRowsLiveData;
+    private LiveData<List<Route>> mRoutesLiveData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +40,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void setupObservers() {
-        mRowsLiveData.observe(this, new Observer<List<Row>>() {
+        mRoutesLiveData.observe(this, new Observer<List<Route>>() {
             @Override
-            public void onChanged(List<Row> rows) {
-                if (rows != null) {
-                    for (Row row : rows) {
+            public void onChanged(List<Route> routes) {
+                if (routes != null) {
+                    for (Route route : routes) {
 
                     }
                 }
@@ -51,7 +54,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void setupViewModel(){
         mapViewModel = ViewModelProviders.of(this).get(MapViewModel.class);
-        mRowsLiveData = mapViewModel.getRowsLiveData();
+        mRoutesLiveData = mapViewModel.getRoutesLiveData();
     }
 
 

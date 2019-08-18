@@ -6,8 +6,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.metromaps.models.Row;
-import com.example.metromaps.models.RowsModel;
+import com.example.metromaps.models.Route;
+import com.example.metromaps.models.RoutesModel;
 import com.example.metromaps.networking.ApiClient;
 import com.example.metromaps.networking.ApiInterface;
 
@@ -19,26 +19,26 @@ import retrofit2.Response;
 
 public class MapViewModel extends ViewModel {
 
-    private MutableLiveData<List<Row>> mRowsLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<Route>> mRoutesLiveData = new MutableLiveData<>();
 
     public void getRoutesFromDb(){
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-        apiInterface.getMetroRoutes().enqueue(new Callback<RowsModel>() {
+        apiInterface.getMetroRoutes().enqueue(new Callback<RoutesModel>() {
             @Override
-            public void onResponse(Call<RowsModel> call, Response<RowsModel> response) {
-                List<Row> rowsList = response.body().getRows();
-                mRowsLiveData.setValue(rowsList);
+            public void onResponse(Call<RoutesModel> call, Response<RoutesModel> response) {
+                List<Route> routes = response.body().getRoutes();
+                mRoutesLiveData.setValue(routes);
                 Log.d("MapViewModel", "onResponse: Metro routes fetched successfully!");
             }
 
             @Override
-            public void onFailure(Call<RowsModel> call, Throwable t) {
+            public void onFailure(Call<RoutesModel> call, Throwable t) {
                 Log.d("MapViewModel", "onFailure: Something went wrong!");
             }
         });
     }
 
-    public LiveData<List<Row>> getRowsLiveData(){
-        return mRowsLiveData;
+    public LiveData<List<Route>> getRoutesLiveData(){
+        return mRoutesLiveData;
     }
 }

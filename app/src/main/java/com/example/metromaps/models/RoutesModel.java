@@ -5,18 +5,18 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class RowsModel {
+public class RoutesModel {
 
 @SerializedName("rows")
 @Expose
-private List<Row> rows = null;
+private List<Route> routes = null;
 
-public List<Row> getRows() {
-return rows;
+public List<Route> getRoutes() {
+return routes;
 }
 
-public void setRows(List<Row> rows) {
-this.rows = rows;
+public void setRoutes(List<Route> routes) {
+this.routes = routes;
 }
 
 }
