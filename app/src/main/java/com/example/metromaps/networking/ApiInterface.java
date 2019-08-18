@@ -1,6 +1,6 @@
-package com.example.metromaps.Networking;
+package com.example.metromaps.networking;
 
-import com.example.metromaps.Models.RowsModel;
+import com.example.metromaps.models.RowsModel;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

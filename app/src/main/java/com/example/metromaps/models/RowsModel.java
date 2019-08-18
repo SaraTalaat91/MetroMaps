@@ -1,4 +1,4 @@
-package com.example.metromaps.Models;
+package com.example.metromaps.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

@@ -1,4 +1,4 @@
-package com.example.metromaps.Networking;
+package com.example.metromaps.networking;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
