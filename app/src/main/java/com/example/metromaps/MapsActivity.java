@@ -16,6 +16,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -58,6 +59,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         addRouteOnMap(route);
                     }
                     mMap.addPolyline(mPolylineOptions);
+
+                    //This callback is to make sure map is loaded before camera updates to avoid crashes
                     mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
                         @Override
                         public void onMapLoaded() {
@@ -75,9 +78,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         double latitude = Double.parseDouble(latLngStringArray[0]);
         double longitude = Double.parseDouble(latLngStringArray[1]);
         LatLng routeLatLng = new LatLng(latitude, longitude);
+
+        //Add each route to the polyline, and also include it in the bounds to wrap all routes within screen
         mPolylineOptions.add(routeLatLng);
         mBuilder.include(routeLatLng);
-        mMap.addMarker(new MarkerOptions().position(routeLatLng).title(route.getTitle()));
+
+        //Add marker to each route
+        mMap.addMarker(new MarkerOptions().position(routeLatLng).title(route.getTitle())
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.metro)));
     }
 
     private void setupViewModel(){
