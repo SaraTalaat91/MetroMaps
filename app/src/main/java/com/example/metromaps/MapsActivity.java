@@ -30,7 +30,6 @@ import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private static final int CAMERA_PADDING = 150;
     private GoogleMap mMap;
     private MapViewModel mapViewModel;
     private LiveData<List<Route>> mRoutesLiveData;
@@ -95,7 +94,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
             @Override
             public void onMapLoaded() {
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(mBuilder.build(), CAMERA_PADDING);
+                int height = getResources().getDisplayMetrics().heightPixels;
+                int width = getResources().getDisplayMetrics().widthPixels;
+                int padding = MapUtils.calculatePadding(height);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(mBuilder.build(),width, height, padding);
                 mMap.animateCamera(cameraUpdate);
             }
         });
