@@ -55,7 +55,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     mPolylineOptions = new PolylineOptions().color(Color.RED);
                     mBuilder = new LatLngBounds.Builder();
                     for (Route route : routes) {
-                        drawRouteOnMap(route);
+                        addRouteOnMap(route);
                     }
                     mMap.addPolyline(mPolylineOptions);
                     mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
@@ -70,7 +70,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    private void drawRouteOnMap(Route route) {
+    private void addRouteOnMap(Route route) {
         String[] latLngStringArray = MapUtils.splitLatLngString(route.getDestinationLongLat().get(0));
         double latitude = Double.parseDouble(latLngStringArray[0]);
         double longitude = Double.parseDouble(latLngStringArray[1]);
