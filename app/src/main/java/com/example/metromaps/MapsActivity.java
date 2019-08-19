@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.example.metromaps.models.Route;
 import com.example.metromaps.utilities.MapUtils;
@@ -30,6 +31,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private MapViewModel mapViewModel;
     private LiveData<List<Route>> mRoutesLiveData;
+    private LiveData<String> mErrorLiveData;
     private PolylineOptions mPolylineOptions;
     private LatLngBounds.Builder mBuilder;
 
@@ -52,25 +54,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mRoutesLiveData.observe(this, new Observer<List<Route>>() {
             @Override
             public void onChanged(List<Route> routes) {
-                if (routes != null) {
-                    mPolylineOptions = new PolylineOptions().color(Color.RED);
-                    mBuilder = new LatLngBounds.Builder();
-                    for (Route route : routes) {
-                        addRouteOnMap(route);
-                    }
-                    mMap.addPolyline(mPolylineOptions);
-
-                    //This callback is to make sure map is loaded before camera updates to avoid crashes
-                    mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-                        @Override
-                        public void onMapLoaded() {
-                            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(mBuilder.build(), CAMERA_PADDING);
-                            mMap.animateCamera(cameraUpdate);
-                        }
-                    });
-                }
+                mPolylineOptions = new PolylineOptions().color(Color.RED);
+                mBuilder = new LatLngBounds.Builder();
+                drawRoutes(routes);
             }
         });
+
+        mErrorLiveData.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                showErrorToast(s);
+            }
+        });
+    }
+
+    private void drawRoutes(List<Route> routes) {
+        for (Route route : routes) {
+            addRouteOnMap(route);
+        }
+        mMap.addPolyline(mPolylineOptions);
+
+        //This callback is to make sure map is loaded before camera updates to avoid crashes
+        mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(mBuilder.build(), CAMERA_PADDING);
+                mMap.animateCamera(cameraUpdate);
+            }
+        });
+    }
+
+    private void showErrorToast(String errorMsg) {
+        Toast.makeText(this, errorMsg, Toast.LENGTH_LONG).show();
     }
 
     private void addRouteOnMap(Route route) {
@@ -88,9 +103,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.metro)));
     }
 
-    private void setupViewModel(){
+    private void setupViewModel() {
         mapViewModel = ViewModelProviders.of(this).get(MapViewModel.class);
         mRoutesLiveData = mapViewModel.getRoutesLiveData();
+        mErrorLiveData = mapViewModel.getErrorLiveData();
     }
 
     @Override

@@ -20,25 +20,33 @@ import retrofit2.Response;
 public class MapViewModel extends ViewModel {
 
     private MutableLiveData<List<Route>> mRoutesLiveData = new MutableLiveData<>();
+    private MutableLiveData<String> mErrorLiveData = new MutableLiveData<>();
 
-    public void getRoutesFromDb(){
+    public void getRoutesFromDb() {
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         apiInterface.getMetroRoutes().enqueue(new Callback<RoutesModel>() {
             @Override
             public void onResponse(Call<RoutesModel> call, Response<RoutesModel> response) {
                 List<Route> routes = response.body().getRoutes();
-                mRoutesLiveData.setValue(routes);
-                Log.d("MapViewModel", "onResponse: Metro routes fetched successfully!");
+                if (response.isSuccessful() && routes != null) {
+                    mRoutesLiveData.setValue(routes);
+                    Log.d("MapViewModel", "onResponse: Metro routes fetched successfully!");
+                }
             }
 
             @Override
             public void onFailure(Call<RoutesModel> call, Throwable t) {
+                mErrorLiveData.setValue(t.getMessage());
                 Log.d("MapViewModel", "onFailure: Something went wrong!");
             }
         });
     }
 
-    public LiveData<List<Route>> getRoutesLiveData(){
+    public LiveData<List<Route>> getRoutesLiveData() {
         return mRoutesLiveData;
+    }
+
+    public LiveData<String> getErrorLiveData() {
+        return mErrorLiveData;
     }
 }
