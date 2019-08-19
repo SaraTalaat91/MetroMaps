@@ -58,8 +58,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         drawRouteOnMap(route);
                     }
                     mMap.addPolyline(mPolylineOptions);
-                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(mBuilder.build(), CAMERA_PADDING);
-                    mMap.animateCamera(cameraUpdate);
+                    mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                        @Override
+                        public void onMapLoaded() {
+                            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(mBuilder.build(), CAMERA_PADDING);
+                            mMap.animateCamera(cameraUpdate);
+                        }
+                    });
                 }
             }
         });
