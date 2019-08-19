@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">MetroMaps</string>
     <string name="title_activity_maps">Map</string>
-    <string name="error_msg_toast">Something went wrong, try again later!</string>
+    <string name="no_internet_connection">No internet connection</string>
 </resources>

@@ -7,9 +7,11 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.metromaps.models.Route;
+import com.example.metromaps.utilities.Connection;
 import com.example.metromaps.utilities.MapUtils;
 import com.example.metromaps.viewmodels.MapViewModel;
 import com.google.android.gms.maps.CameraUpdate;
@@ -22,6 +24,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
@@ -47,7 +50,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         setupViewModel();
         setupObservers();
-        mapViewModel.getRoutesFromDb();
+        checkConnection();
+    }
+
+    private void checkConnection() {
+        if (Connection.isConnected(getApplicationContext())) {
+            mapViewModel.getRoutesFromDb();
+        }else{
+            showNoConnectionSnack();
+        }
+    }
+
+    private void setupViewModel() {
+        mapViewModel = ViewModelProviders.of(this).get(MapViewModel.class);
+        mRoutesLiveData = mapViewModel.getRoutesLiveData();
+        mErrorLiveData = mapViewModel.getErrorLiveData();
     }
 
     private void setupObservers() {
@@ -103,10 +120,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.metro)));
     }
 
-    private void setupViewModel() {
-        mapViewModel = ViewModelProviders.of(this).get(MapViewModel.class);
-        mRoutesLiveData = mapViewModel.getRoutesLiveData();
-        mErrorLiveData = mapViewModel.getErrorLiveData();
+    private void showNoConnectionSnack() {
+        final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), getString(R.string.no_internet_connection), Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction("TRY AGAIN", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackbar.dismiss();
+                checkConnection();
+            }
+        }).show();
     }
 
     @Override

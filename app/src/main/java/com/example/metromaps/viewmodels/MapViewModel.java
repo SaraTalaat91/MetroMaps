@@ -37,16 +37,11 @@ public class MapViewModel extends ViewModel {
             @Override
             public void onFailure(Call<RoutesModel> call, Throwable t) {
                 mErrorLiveData.setValue(t.getMessage());
-                Log.d("MapViewModel", "onFailure: Something went wrong!");
+                Log.d("MapViewModel", "onFailure: Something went wrong!" + t.getMessage());
             }
         });
     }
 
-    public LiveData<List<Route>> getRoutesLiveData() {
-        return mRoutesLiveData;
-    }
-
-    public LiveData<String> getErrorLiveData() {
-        return mErrorLiveData;
-    }
+    public LiveData<List<Route>> getRoutesLiveData() { return mRoutesLiveData; }
+    public LiveData<String> getErrorLiveData() { return mErrorLiveData; }
 }
